@@ -157,9 +157,12 @@ export async function contactPage(env) {
       document.getElementById('contact-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        console.log('[Contact Form] Form submission started');
+
         // Validate email
         const email = document.getElementById('contact-email').value;
         if (!validateEmail(email)) {
+          console.log('[Contact Form] Email validation failed:', email);
           showNotification('Please enter a valid email address', 'error');
           return;
         }
@@ -173,12 +176,16 @@ export async function contactPage(env) {
           message: document.getElementById('contact-subject').value + ': ' + document.getElementById('contact-message').value,
         };
 
+        console.log('[Contact Form] Form data prepared:', JSON.stringify(formData));
+
         try {
           const submitBtn = e.target.querySelector('button[type="submit"]');
           submitBtn.disabled = true;
           submitBtn.textContent = 'Sending...';
 
-          await API.post('/inquiries', formData);
+          console.log('[Contact Form] Sending API request...');
+          const response = await API.post('/inquiries', formData);
+          console.log('[Contact Form] API response received:', JSON.stringify(response));
 
           showNotification('Thank you for contacting us! We will respond shortly.', 'success');
           document.getElementById('contact-form').reset();
@@ -186,7 +193,7 @@ export async function contactPage(env) {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Send Message';
         } catch (error) {
-          console.error('Error sending message:', error);
+          console.error('[Contact Form] Error sending message:', error);
           showNotification('Failed to send message. Please try again or contact us directly.', 'error');
 
           const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -230,15 +237,15 @@ export async function contactPage(env) {
       loadContactInfo();
 
       // Add responsive styles
-      const style = document.createElement('style');
-      style.textContent = \`
+      const responsiveStyle = document.createElement('style');
+      responsiveStyle.textContent = \`
         @media (max-width: 768px) {
           section > div > div[style*="grid-template-columns: 1fr 1fr"] {
             grid-template-columns: 1fr !important;
           }
         }
       \`;
-      document.head.appendChild(style);
+      document.head.appendChild(responsiveStyle);
     </script>
   `;
 

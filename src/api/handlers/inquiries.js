@@ -49,10 +49,15 @@ async function createInquiry(request, env, corsHeaders) {
   try {
     const data = await request.json();
 
+    // Log received data for debugging
+    console.log('Received inquiry data:', JSON.stringify(data));
+
     // Validate required fields
     if (!data.name || !data.email || !data.message) {
+      console.log('Validation failed: missing required fields');
       return new Response(JSON.stringify({
-        error: 'Name, email, and message are required'
+        error: 'Name, email, and message are required',
+        received: { name: !!data.name, email: !!data.email, message: !!data.message }
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -62,13 +67,17 @@ async function createInquiry(request, env, corsHeaders) {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
+      console.log('Validation failed: invalid email format');
       return new Response(JSON.stringify({
-        error: 'Invalid email format'
+        error: 'Invalid email format',
+        email: data.email
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    console.log('Attempting to insert inquiry into database...');
 
     const result = await env.DB.prepare(
       `INSERT INTO inquiries (product_id, name, email, company, phone, country, message, status)
@@ -84,6 +93,8 @@ async function createInquiry(request, env, corsHeaders) {
       'pending'
     ).run();
 
+    console.log('Database insert result:', JSON.stringify(result.meta));
+
     return new Response(JSON.stringify({
       success: true,
       message: 'Inquiry submitted successfully',
@@ -93,7 +104,11 @@ async function createInquiry(request, env, corsHeaders) {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error('Error creating inquiry:', error);
+    return new Response(JSON.stringify({
+      error: error.message,
+      stack: error.stack
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

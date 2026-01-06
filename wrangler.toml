@@ -6,7 +6,9 @@ compatibility_date = "2025-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "b2b_database"
-database_id = "8755429a-7eb4-4dac-8aa4-55e4b58b2f63"
+database_id = "5b767c56-5863-4d69-a776-8ba19a40d04b"
+preview_database_id = "b659cf55-530d-4c3c-8c9f-8de50beac46b"
+remote = true
 
 # Environment variables
 [vars]
@@ -16,7 +18,11 @@ ENVIRONMENT = "development"
 [[r2_buckets]]
 binding = "IMAGES"
 bucket_name = "b2b-product-images"
+preview_bucket_name = "b2b-product-images-preview"
+remote = true
 
 [[kv_namespaces]]
-binding = "STATIC_ASSETS" #
-id = "f665b3c2520b4900bc27aef4c8a9d82d" # 从 Cloudflare 获取的 KV Namespace ID
+binding = "STATIC_ASSETS"
+id = "0a6fc5f112e84c828a8fc015601cd769"
+preview_id = "3cecf99722074186991d2ca48574b306"
+remote = true

@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "wrangler dev",
+    "dev:local": "wrangler dev --local",
     "deploy": "wrangler deploy"
   },
   "keywords": ["cloudflare", "workers", "b2b", "website"],

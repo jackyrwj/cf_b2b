@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>API Test</title>
+</head>
+<body>
+  <h1>Inquiry API Test</h1>
+  <button onclick="testAPI()">Test API</button>
+  <pre id="result"></pre>
+
+  <script>
+    async function testAPI() {
+      const result = document.getElementById('result');
+      result.textContent = 'Testing...';
+
+      try {
+        const response = await fetch('/api/inquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'API测试',
+            email: 'apitest@example.com',
+            company: '测试公司',
+            phone: '1234567890',
+            country: 'China',
+            message: 'Product Inquiry: 这是测试消息'
+          })
+        });
+
+        result.textContent = `Status: ${response.status}\nOK: ${response.ok}\n\n`;
+
+        const data = await response.json();
+        result.textContent += JSON.stringify(data, null, 2);
+
+        if (response.ok && data.success) {
+          alert('✅ API测试成功！ Inquiry ID: ' + data.data.id);
+        } else {
+          alert('❌ API测试失败！');
+        }
+      } catch (error) {
+        result.textContent = `Error: ${error.message}\n\n${error.stack}`;
+        alert('❌ 网络错误: ' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
