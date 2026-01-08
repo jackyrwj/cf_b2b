@@ -1314,6 +1314,67 @@ export function createLayout(title, content, additionalScripts = '', metaDescrip
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* Back to Top Button - Memphis Style */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--primary);
+      border: 3px solid var(--border);
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all var(--transition-normal);
+      z-index: 999;
+      box-shadow: var(--shadow-md);
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 6px 6px 0 var(--secondary);
+    }
+
+    .back-to-top:active {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .back-to-top:focus-visible {
+      outline: 3px solid var(--secondary);
+      outline-offset: 2px;
+    }
+
+    .back-to-top svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    @media (max-width: 768px) {
+      .back-to-top {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1324,6 +1385,13 @@ export function createLayout(title, content, additionalScripts = '', metaDescrip
   </main>
 
   ${createFooter()}
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 4l-8 8h5v8h6v-8h5z"/>
+    </svg>
+  </button>
 
   <script>
     /**
@@ -1346,6 +1414,28 @@ export function createLayout(title, content, additionalScripts = '', metaDescrip
           if (!menuToggle.contains(event.target) && !navMenu.contains(event.target)) {
             navMenu.classList.remove('active');
           }
+        });
+      }
+
+      // Back to top button functionality
+      const backToTopButton = document.getElementById('backToTop');
+
+      if (backToTopButton) {
+        // Show/hide button based on scroll position
+        window.addEventListener('scroll', function() {
+          if (window.pageYOffset > 300) {
+            backToTopButton.classList.add('visible');
+          } else {
+            backToTopButton.classList.remove('visible');
+          }
+        });
+
+        // Smooth scroll to top when clicked
+        backToTopButton.addEventListener('click', function() {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
         });
       }
 
